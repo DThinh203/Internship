@@ -106,18 +106,61 @@ Giải pháp được thiết kế theo một quy trình khép kín, dựa trên
 
 ## 5. Ước tính ngân sách
 
-Phần này phân tích chi phí dự án cho việc thực hiện workshop.
+Phần này phân tích chi phí dự án theo hai giai đoạn: **Chi phí phát triển một lần** trong quá trình thực hiện workshop và **Chi phí vận hành/ROI dự kiến** nếu giải pháp được đưa vào hoạt động thực tế.
 
-### Chi phí Phát triển (Workshop)
-* **Chi phí Nhân sự:** Chi phí chính là thời gian của các thành viên tham gia workshop để học hỏi và thực hành.
+### 💰 Chi phí Phát triển (Thực hiện Workshop)
+Đây là chi phí một lần để xây dựng và hoàn thành sản phẩm khả thi tối thiểu (MVP) trong workshop.
+
+* **Chi phí Nhân sự:**
+    * Chi phí chính là thời gian mà các thành viên bỏ ra để tham gia, học hỏi và thực hành. Nó được xem như một khoản **đầu tư vào năng lực và kỹ năng của đội ngũ**.
+
 * **Chi phí Hạ tầng Workshop:**
-    * Với việc sử dụng các dịch vụ trong phạm vi **Bậc miễn phí của AWS (AWS Free Tier)** (RDS `t3.micro`, SageMaker `t3.medium`, Lambda, S3...), chi phí hạ tầng cho việc thực hiện workshop này là không đáng kể.
-    * **Tổng chi phí hạ tầng trong workshop (dự kiến):** **`~$0`** (với điều kiện dọn dẹp tài nguyên sau khi hoàn thành).
+    * Nhờ việc lựa chọn các dịch vụ nằm trong **Bậc miễn phí của AWS (AWS Free Tier)**, chi phí hạ tầng cho workshop gần như không đáng kể.
+        * **Amazon RDS:** 750 giờ miễn phí cho instance `db.t3.micro`.
+        * **Amazon SageMaker:** 250 giờ miễn phí cho môi trường Studio/JupyterLab `ml.t3.medium`.
+        * **AWS Lambda:** 1 triệu request miễn phí hàng tháng.
+        * **Amazon S3:** 5 GB dung lượng lưu trữ miễn phí.
+        * **Secrets Manager, SNS, EventBridge:** Đều có bậc miễn phí rất lớn.
+    * **Tổng chi phí hạ tầng trong workshop (dự kiến):** **`~$0 USD`**
+        *(Với điều kiện quan trọng là phải dọn dẹp toàn bộ tài nguyên sau khi hoàn thành)*
 
-### Phân tích Lợi tức Đầu tư (ROI) từ Workshop
-* **Lợi nhuận chính:** Không phải là tiết kiệm chi phí trực tiếp, mà là **đầu tư vào kiến thức và năng lực của đội ngũ**.
-* **Kết quả:** Sau workshop, đội ngũ có đủ kỹ năng để xây dựng một phiên bản sản xuất hoàn chỉnh. Framework và mã nguồn từ workshop có thể được tái sử dụng, giúp giảm đáng kể thời gian và chi phí cho một dự án thực tế trong tương lai.
-* **Thời gian hoàn vốn:** Vốn đầu tư (thời gian) được "hoàn lại" ngay lập tức thông qua việc nâng cao kỹ năng và xây dựng được một sản phẩm mẫu hoạt động.
+**➡️ Tổng chi phí đầu tư ban đầu:** Gần như bằng không về mặt tài chính, chủ yếu là chi phí cơ hội và thời gian của nhân sự.
+
+---
+
+### 📈 Chi phí Vận hành và Phân tích ROI (Dự kiến sau triển khai)
+Đây là các chi phí và lợi ích được dự báo hàng tháng nếu hệ thống từ workshop được đưa vào vận hành thực tế.
+
+#### Chi phí Vận hành Hàng tháng (Kiến trúc của chúng ta)
+
+* **Chi phí Hạ tầng AWS (Sau khi hết Free Tier):**
+    * **Amazon RDS (`db.t3.micro`):** ~$12 USD/tháng
+    * **Amazon SageMaker:** Không có chi phí hosting endpoint. Chi phí chỉ phát sinh khi chạy notebook để huấn luyện lại mô hình (ví dụ: 2 giờ/tháng): <$1 USD/tháng
+    * **AWS Lambda, EventBridge, S3, SNS:** Do bản chất serverless và lưu lượng thấp, tổng chi phí cho các dịch vụ này rất nhỏ: ~$2-3 USD/tháng
+    * **AWS Secrets Manager:** ~$0.40 USD/tháng
+    * **Tổng cộng chi phí hạ tầng:** **`~$15 - $20 USD/tháng`**
+
+* **Chi phí Nhân sự Bảo trì:**
+    * *Giả định:* Cần khoảng 4 giờ/tháng của kỹ sư để giám sát và tái huấn luyện mô hình.
+    * **Chi phí thời gian bảo trì:** Tương đối nhỏ, có thể tích hợp vào công việc thường ngày.
+
+**➡️ Tổng chi phí vận hành hàng tháng (Dự kiến):** **`~$20 USD`**
+
+#### Phân tích Lợi tức Đầu tư (ROI)
+
+* **Bối cảnh Giả định:**
+    * Một cụm CSDL RDS `db.r5.2xlarge` đang hoạt động với chi phí: **`$1,200/tháng`**.
+    * Hệ thống ML phát hiện rằng CSDL có thể chạy ở mức `db.r5.xlarge` (`$600/tháng`) trong 80% thời gian.
+
+* **Tiềm năng Tiết kiệm:**
+    * *Chi phí mới (ước tính):* `($600 × 80%) + ($1,200 × 20%) = $480 + $240 = $720/tháng`.
+    * **Số tiền tiết kiệm được hàng tháng:** `$1,200 - $720 =` **`$480/tháng`**.
+
+* **Kết luận ROI (với kiến trúc của chúng ta):**
+    * **Lợi nhuận ròng hàng tháng:** `$480 (Tiết kiệm) - $20 (Chi phí hạ tầng ML) =` **`$460/tháng`**.
+    * **Thời gian hoàn vốn (Break-Even Point):** Giả sử chi phí để một kỹ sư dành ra 1 tuần (40 giờ) để "sản xuất hóa" mã nguồn từ workshop là khoảng $1,200 USD.
+        * `$1,200 (Chi phí phát triển) / $460 (Lợi nhuận ròng/tháng)`
+    * **Kết quả:** Chi phí phát triển sẽ được hoàn vốn chỉ sau **chưa đầy 3 tháng**.
 
 ---
 
