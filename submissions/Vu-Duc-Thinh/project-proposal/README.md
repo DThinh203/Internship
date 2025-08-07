@@ -1,6 +1,6 @@
 
 ```markdown
-# Dự Án Tối Ưu Hóa Tài Nguyên Cơ Sở Dữ Liệu bằng Machine Learning
+# Database Resource Optimization với Machine Learning
 
 ---
 
